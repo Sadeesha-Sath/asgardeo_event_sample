@@ -4,8 +4,14 @@ import ballerinax/trigger.asgardeo;
 
 configurable asgardeo:ListenerConfig config = ?;
 
-listener http:Listener httpListener = new (8090);
+listener http:Listener httpListener = new (8070);
+listener http:Listener httpListener2 = new (8080);
+listener http:Listener httpListener3 = new (8090);
+
 listener asgardeo:Listener webhookListener = new (config, httpListener);
+listener asgardeo:Listener webhookListener2 = new (config, httpListener2);
+listener asgardeo:Listener webhookListener3 = new (config, httpListener3);
+
 
 service asgardeo:RegistrationService on webhookListener {
 
@@ -25,7 +31,7 @@ service asgardeo:RegistrationService on webhookListener {
     }
 }
 
-service asgardeo:UserOperationService on webhookListener {
+service asgardeo:UserOperationService on webhookListener2 {
 
     remote function onDeleteUser(asgardeo:GenericEvent event) returns error? {
         log:printInfo(event.toJsonString());
@@ -51,7 +57,7 @@ service asgardeo:UserOperationService on webhookListener {
     }
 }
 
-service asgardeo:LoginService on webhookListener {
+service asgardeo:LoginService on webhookListener3 {
     
 
     remote function onLoginFailed(asgardeo:LoginFailedEvent event) returns error? {
